@@ -35,5 +35,3 @@ Eirian will take commands from the user and scrape two different sites. It will 
 - ">firstDose"
 
 - ">help" (Provides command descriptions)
-
-
