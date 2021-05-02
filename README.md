@@ -13,7 +13,7 @@ Eirian will take commands from the user and scrape two different sites. It will 
           -> Place its auth token into the python file by replacing "ENTER YOUR TOKEN HERE" with your token
 
 
-## **Sources used to get information**
+## **Information Sources**
 - https://covid-19.ontario.ca/covid-19-data/
 - https://covid-19.ontario.ca/covid-19-vaccines-ontario
 
