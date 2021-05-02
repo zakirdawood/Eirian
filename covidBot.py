@@ -12,7 +12,7 @@ import time
 
 #endregion
 
-token = 'ODM4MTQyOTIxOTk0OTI4MTQ5.YI2zbA.b64a3jrmaTqlsnZt2xEyFPwZXxM'
+token = 'YOUR TOKEN HERE'
 
 #region Init
 
