@@ -12,7 +12,7 @@ import time
 
 #endregion
 
-token = 'ENTER YOUR TOKEN HERE'
+token = 'ODM4MTQyOTIxOTk0OTI4MTQ5.YI2zbA.b64a3jrmaTqlsnZt2xEyFPwZXxM'
 
 #region Init
 
@@ -136,8 +136,9 @@ def cmdOntarioCases(dataSet):
             return (messages[dataSet] + active[:2] + ',' + active[2:])
         else:
             return (messages[dataSet] + cases[dataSet].text)
-    except:
-        return 'No Response\n Please Try Again'
+    except Exception as e:
+        print(e)
+        return 'No Response\nPlease Try Again'
 
 def cmdCityCases(city, dataSet, statistic):
     try:
@@ -182,8 +183,9 @@ def cmdCityCases(city, dataSet, statistic):
             return 'No Result for ' + city
 
         return (result + ' ----> ' + statistic + ':\t' + data[1])
-    except:
-        return 'No Response\n Please Try Again'
+    except Exception as e:
+        print(e)
+        return 'No Response\nPlease Try Again'
 
 def cmdVaccineData(dataSet):
     try:
@@ -210,8 +212,9 @@ def cmdVaccineData(dataSet):
             percentage = '{:.2%}'.format(totalDoses/ontarioPopulation)
             totalDoses = f'{totalDoses:,d}'
             return('Number of People That Have Received At Least One Dose: ' + totalDoses + '\nPercentage of Ontario Population With At Least One Dose: ' + percentage)
-    except:
-        return 'No Response\n Please Try Again'
+    except Exception as e:
+        print(e)
+        return 'No Response\nPlease Try Again'
 
 #endregion
 
