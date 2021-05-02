@@ -12,7 +12,7 @@ import time
 
 #endregion
 
-token = 'YOUR TOKEN HERE'
+token = 'ENTER YOUR TOKEN HERE'
 
 #region Init
 
@@ -42,6 +42,7 @@ def main():
 
 @client.event
 async def on_ready():
+    await client.change_presence(activity=discord.Game('| >help'))
     print('Bot Ready')
 
 @client.command(aliases=['citycases', 'new'])
@@ -109,8 +110,17 @@ async def firstDose(ctx):
 async def help(ctx):
     embed = discord.Embed(color=discord.Colour.green())
     embed.set_author(name='Help')
-    embed.add_field(name='City Specific Commands',value='CityCases\nCityDeaths\nCityActive\nCityTotal',inline=False)
-    embed.add_field(name='Future plans', value="- add Ontario testing data\n- add postivity rate data\n- add combined statistics for a certain health region", inline=False)
+    embed.add_field(name='Commands:', value='>NewCases - Returns New Cases in Ontario'
+                                            '\n>NewDeaths - Returns New Covid 19 Related Deaths in Ontario'
+                                            '\n>TotalCases - Returns the Total Number of Covid 19 Cases in Ontario'
+                                            '\n>TotalDeaths - Returns the Total Number of Covid 19 Related Deaths in Ontario'
+                                            '\n>TotalActive - Returns the Number of Active Covid 19 Cases in Ontario'
+                                            '\n>DailyVaccines - Returns New Covid 19 Related Deaths in Ontario'
+                                            '\n>TotalVaccines - Returns Total Number of Covid 19 Vaccine Doses Administered'
+                                            '\n>FullyImmunized - Returns Percentage of Ontarians Fully Immunized'
+                                            '\n>FirstDose - Returns Percentage of Ontarians That Have Received At Least One Vaccine Dose')
+    embed.add_field(name='City Specific Commands:',value='>CityCases (City)\n>CityDeaths (City)\n>CityActive (City)\n>CityTotal (City)',inline=False)
+    embed.add_field(name='Future plans:', value="- add Ontario testing data\n- add postivity rate data\n- add combined statistics for a certain health region", inline=False)
                     
     await ctx.send(embed=embed)
 
@@ -125,7 +135,7 @@ def cmdOntarioCases(dataSet):
         if driver.current_url != 'https://covid-19.ontario.ca/covid-19-data/':
             driver.get('https://covid-19.ontario.ca/covid-19-data/')
 
-        caseCounts = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'ontario-covid-viz')))
+        caseCounts = WebDriverWait(driver, 7).until(EC.presence_of_element_located((By.ID, 'ontario-covid-viz')))
 
         cases = caseCounts.find_elements_by_class_name('cviz-label-value--value ')
 
@@ -138,13 +148,13 @@ def cmdOntarioCases(dataSet):
             return (messages[dataSet] + cases[dataSet].text)
     except Exception as e:
         print(e)
-        return 'No Response\nPlease Try Again'
+        return 'Site Unresponsive\nPlease Try Again'
 
 def cmdCityCases(city, dataSet, statistic):
-    try:
-        global citySearch
+    global citySearch
 
-        if driver.current_url != 'https://covid-19.ontario.ca/covid-19-data/':
+    try:
+        if driver.current_url != 'https://covid-19.ontario.ca/covid-19-data/' or citySearch == False:
                 driver.get('https://covid-19.ontario.ca/covid-19-data/')
         elif citySearch:
             closeLeaflet = driver.find_element_by_class_name('leaflet-popup-close-button')
@@ -158,7 +168,7 @@ def cmdCityCases(city, dataSet, statistic):
         search = driver.find_element_by_id('cviz-gen-search')
         search.send_keys(city)
             
-        result = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'btn-focused')))
+        result = WebDriverWait(driver, 7).until(EC.presence_of_element_located((By.CLASS_NAME, 'btn-focused')))
         print(result.text)
         result = result.text
         search.send_keys(Keys.RETURN)
@@ -166,12 +176,9 @@ def cmdCityCases(city, dataSet, statistic):
         print('Search')
 
         
-        content = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@id="regionalMap"]/div[1]/div[1]/div[6]/div/div[1]/div/div/p[2]')))
-        leafletPopup = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'leaflet-popup-content'))).text.split('\n')
+        content = WebDriverWait(driver, 7).until(EC.presence_of_element_located((By.XPATH, '//*[@id="regionalMap"]/div[1]/div[1]/div[6]/div/div[1]/div/div/p[2]')))
+        leafletPopup = WebDriverWait(driver, 7).until(EC.presence_of_element_located((By.CLASS_NAME, 'leaflet-popup-content'))).text.split('\n')
         print(len(leafletPopup))
-        count = 0
-        #while len(leafletPopup) < 2 :
-            #continue
         data = leafletPopup[dataSet].split(' ')
 
         citySearch = True
@@ -184,8 +191,10 @@ def cmdCityCases(city, dataSet, statistic):
 
         return (result + ' ----> ' + statistic + ':\t' + data[1])
     except Exception as e:
+        citySearch = False
         print(e)
-        return 'No Response\nPlease Try Again'
+        print(citySearch)
+        return 'No Result\nPlease Try Again'
 
 def cmdVaccineData(dataSet):
     try:
@@ -194,7 +203,7 @@ def cmdVaccineData(dataSet):
 
         if dataSet == 0:
             element = driver.find_element_by_id('previous-day-doses-administered')
-            return('Doses administered yesterday: ' + element.text)
+            return('Doses Administered Yesterday: ' + element.text)
         elif dataSet == 1:
             element = driver.find_element_by_id('total-doses-administered')
             return('Total Doses Administered: ' + element.text)
@@ -214,7 +223,7 @@ def cmdVaccineData(dataSet):
             return('Number of People That Have Received At Least One Dose: ' + totalDoses + '\nPercentage of Ontario Population With At Least One Dose: ' + percentage)
     except Exception as e:
         print(e)
-        return 'No Response\nPlease Try Again'
+        return 'Site Unresponsive\nPlease Try Again'
 
 #endregion
 
