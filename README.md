@@ -1,10 +1,16 @@
 Eirian will take commands from the user and scrape two different sites. It will deliver information on new cases, active cases, deaths, and total cases for cities based on public health units. Additionally, it will provide provincial-wide statistics. Eirian also provides information on vaccine doses administered and the percentage of the population immunized.
 
-## **Instructions to Use** 
+## **Instructions (WINDOWS)** 
 - https://sites.google.com/a/chromium.org/chromedriver/downloads
           -> download correct version according to device
-- Requires python and pip, along with selenium and discord.py
-- Set up your own application for discord to use Eirian and provide its token into the python file by replacing "ENTER YOUR TOKEN HERE PLEASE" with  "token"
+          -> place in C:\Program Files (x86)\
+- Requires Python installation of selenium and discord python libraries
+          ->Install the libraries listed below by typing them into Command Prompt
+          ->pip install selenium
+          ->pip install discord
+- Set up your own Discord Bot Application
+          -> http://discord.com/developers/applications
+          -> Place its auth token into the python file by replacing "ENTER YOUR TOKEN HERE" with your token
 
 
 ## **Sources used to get information**
@@ -27,3 +33,5 @@ Eirian will take commands from the user and scrape two different sites. It will 
 - ">totalVaccines"
 - ">fullyImmunized"
 - ">firstDose"
+
+- ">help" (Provides command descriptions)
