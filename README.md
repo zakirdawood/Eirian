@@ -12,18 +12,18 @@ Eirian will take commands from the user and scrape two different sites. It will 
 - https://covid-19.ontario.ca/covid-19-vaccines-ontario
 
 ## **Command Set**
-- >newCases (gives Ontario stats)
-- >newDeaths (gives Ontario stats)
-- >totalCases (gives Ontario stats)
-- >totalDeaths (gives Ontario stats)
-- >totalActive (gives Ontario stats)
+- ">newCases" (gives Ontario stats)
+- ">newDeaths" (gives Ontario stats)
+- ">totalCases" (gives Ontario stats)
+- ">totalDeaths" (gives Ontario stats)
+- ">totalActive" (gives Ontario stats)
 
-- >newCases "City" (but with no quotes)
-- >totalDeaths "City" (but with no quotes)
-- >totalCases "City" (but with no quotes)
-- >totalActive "City" (but with no quotes)
+- ">newCases City"
+- ">totalDeaths City"
+- ">totalCases City"
+- ">totalActive City"
 
-- >dailyVaccines
-- >totalVaccines
-- >fullyImmunized
-- >firstDose
+- ">dailyVaccines"
+- ">totalVaccines"
+- ">fullyImmunized"
+- ">firstDose"
