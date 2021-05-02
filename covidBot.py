@@ -12,11 +12,12 @@ import time
 
 #endregion
 
-token = 'ENTER YOUR OWN TOKEN HERE'
+token = 'ENTER YOUR TOKEN HERE'
 
 #region Init
 
-client = commands.Bot(command_prefix='>')
+client = commands.Bot(command_prefix='>', case_insensitive=True)
+client.remove_command('help')
 driver = None
 citySearch = False
 ontarioPopulation = 14570000
@@ -28,15 +29,12 @@ def main():
     PATH = r'C:\Program Files (x86)\chromedriver.exe'
 
     options = webdriver.ChromeOptions()
-    #options.headless = True
-    #options.add_argument('disable-gpu')
+    options.headless = True
+    options.add_argument('disable-gpu')
 
     driver = webdriver.Chrome(executable_path=PATH, options=options)
-    print(driver.title)
+    
     client.run(token)
-
-if __name__ == '__main__':
-    main()
 
 #endregion
 
@@ -44,10 +42,9 @@ if __name__ == '__main__':
 
 @client.event
 async def on_ready():
-    print('ready')
-    await client.get_channel(837718201340919809).send('Driver Ready')
+    print('Bot Ready')
 
-@client.command(aliases=['cityCases', 'citycases', 'newcases', 'new'])
+@client.command(aliases=['citycases', 'new'])
 async def newCases(ctx, * , city=None):
     if city == None:
         message = cmdOntarioCases(1)
@@ -56,7 +53,7 @@ async def newCases(ctx, * , city=None):
  
     await ctx.send(message)
 
-@client.command(aliases=['cityDeaths', 'CityDeaths', 'totaldeaths', 'TotalDeaths', 'deaths', 'Deaths'])
+@client.command(aliases=['citydeaths', 'deaths'])
 async def totalDeaths(ctx, * , city=None):
     if city == None:
         message = cmdOntarioCases(4)
@@ -65,7 +62,7 @@ async def totalDeaths(ctx, * , city=None):
 
     await ctx.send(message)
 
-@client.command(aliases=['totalactive', 'TotalActive', 'cityActive', 'cityactive', 'CityActive', 'active', 'Active', 'currentCases', 'currentcases', 'CurrentCases', 'activeCases', 'activecases', 'ActiveCases'])
+@client.command(aliases=['cityactive', 'active', 'currentcases', 'activecases'])
 async def totalActive(ctx, * , city=None):
     if city == None:
         message = cmdOntarioCases(6)
@@ -74,7 +71,7 @@ async def totalActive(ctx, * , city=None):
     
     await ctx.send(message)
 
-@client.command(aliases=['TotalCases', 'totalcases', 'total', 'Total', 'allCases', 'allcases', 'cases', 'Cases'])
+@client.command(aliases=['total', 'cases','citytotal'])
 async def totalCases(ctx, * , city=None):
     if city == None:
         message = cmdOntarioCases(0)
@@ -83,7 +80,7 @@ async def totalCases(ctx, * , city=None):
 
     await ctx.send(message)
 
-@client.command(aliases=['NewDeaths', 'newdeaths'])
+@client.command()
 async def newDeaths(ctx):
     message = cmdOntarioCases(5)
     await ctx.send(message)
@@ -109,8 +106,13 @@ async def firstDose(ctx):
     await ctx.send(message)
 
 @client.command()
-async def testBot(ctx):
-    await ctx.send('Version 1')
+async def help(ctx):
+    embed = discord.Embed(color=discord.Colour.green())
+    embed.set_author(name='Help')
+    embed.add_field(name='City Specific Commands',value='CityCases\nCityDeaths\nCityActive\nCityTotal',inline=False)
+    embed.add_field(name='Future plans', value="- add Ontario testing data\n- add postivity rate data\n- add combined statistics for a certain health region", inline=False)
+                    
+    await ctx.send(embed=embed)
 
 #endregion
 
@@ -135,26 +137,26 @@ def cmdOntarioCases(dataSet):
         else:
             return (messages[dataSet] + cases[dataSet].text)
     except:
-        return 'Site Unresponsive'
+        return 'No Response\n Please Try Again'
 
 def cmdCityCases(city, dataSet, statistic):
-    global citySearch
-
     try:
+        global citySearch
+
         if driver.current_url != 'https://covid-19.ontario.ca/covid-19-data/':
-            driver.get('https://covid-19.ontario.ca/covid-19-data/')
+                driver.get('https://covid-19.ontario.ca/covid-19-data/')
         elif citySearch:
             closeLeaflet = driver.find_element_by_class_name('leaflet-popup-close-button')
             closeLeaflet.click()
             clearSearch = driver.find_element_by_xpath('//*[@id="compare-chart-controls"]/div[3]/div/button')
             clearSearch.click()
-            
+                
         numberFormat = driver.find_element_by_id('cviz_radio-button-optioncapital1')
         numberFormat.click()
         print('Click')
         search = driver.find_element_by_id('cviz-gen-search')
         search.send_keys(city)
-        
+            
         result = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'btn-focused')))
         print(result.text)
         result = result.text
@@ -162,9 +164,13 @@ def cmdCityCases(city, dataSet, statistic):
 
         print('Search')
 
+        
+        content = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@id="regionalMap"]/div[1]/div[1]/div[6]/div/div[1]/div/div/p[2]')))
         leafletPopup = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'leaflet-popup-content'))).text.split('\n')
-        content = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@id="regionalMap"]/div[1]/div[1]/div[6]/div/div[1]/div/div/p[1]')))
         print(len(leafletPopup))
+        count = 0
+        #while len(leafletPopup) < 2 :
+            #continue
         data = leafletPopup[dataSet].split(' ')
 
         citySearch = True
@@ -175,34 +181,39 @@ def cmdCityCases(city, dataSet, statistic):
         if len(data) <= 1:
             return 'No Result for ' + city
 
-        return (result + '\t' + statistic + ':\t' + data[1])
+        return (result + ' ----> ' + statistic + ':\t' + data[1])
     except:
-        return ('No Response')
+        return 'No Response\n Please Try Again'
 
 def cmdVaccineData(dataSet):
-    if driver.current_url != 'https://covid-19.ontario.ca/covid-19-vaccines-ontario':
-        driver.get('https://covid-19.ontario.ca/covid-19-vaccines-ontario')
+    try:
+        if driver.current_url != 'https://covid-19.ontario.ca/covid-19-vaccines-ontario':
+            driver.get('https://covid-19.ontario.ca/covid-19-vaccines-ontario')
 
-    if dataSet == 0:
-        element = driver.find_element_by_id('previous-day-doses-administered')
-        return('Doses administered yesterday: ' + element.text)
-    elif dataSet == 1:
-        element = driver.find_element_by_id('total-doses-administered')
-        return('Total Doses Administered: ' + element.text)
-    elif dataSet == 2:
-        elementText = driver.find_element_by_id('total-vaccinations-completed').text
-        elementText2 = int(''.join(c for c in elementText if c.isdigit()))
-        percentage = '{:.2%}'.format(elementText2/ontarioPopulation)
-        return('Number of People Fully Imunized: ' + str(elementText) + '\nPercentage of Ontario Population Fully Immunized: ' + percentage)
-    elif dataSet == 3:
-        totalDoses = driver.find_element_by_id('total-doses-administered').text
-        totalDoses = int(''.join(c for c in totalDoses if c.isdigit()))
-        secondDoses = driver.find_element_by_id('total-vaccinations-completed').text
-        secondDoses = int(''.join(c for c in secondDoses if c.isdigit()))
-        totalDoses = totalDoses - secondDoses
-        percentage = '{:.2%}'.format(totalDoses/ontarioPopulation)
-        totalDoses = f'{totalDoses:,d}'
-        return('Number of People That Have Received At Least One Dose: ' + totalDoses + '\nPercentage of Ontario Population With At Least One Dose: ' + percentage)
+        if dataSet == 0:
+            element = driver.find_element_by_id('previous-day-doses-administered')
+            return('Doses administered yesterday: ' + element.text)
+        elif dataSet == 1:
+            element = driver.find_element_by_id('total-doses-administered')
+            return('Total Doses Administered: ' + element.text)
+        elif dataSet == 2:
+            elementText = driver.find_element_by_id('total-vaccinations-completed').text
+            elementText2 = int(''.join(c for c in elementText if c.isdigit()))
+            percentage = '{:.2%}'.format(elementText2/ontarioPopulation)
+            return('Number of People Fully Imunized: ' + str(elementText) + '\nPercentage of Ontario Population Fully Immunized: ' + percentage)
+        elif dataSet == 3:
+            totalDoses = driver.find_element_by_id('total-doses-administered').text
+            totalDoses = int(''.join(c for c in totalDoses if c.isdigit()))
+            secondDoses = driver.find_element_by_id('total-vaccinations-completed').text
+            secondDoses = int(''.join(c for c in secondDoses if c.isdigit()))
+            totalDoses = totalDoses - secondDoses
+            percentage = '{:.2%}'.format(totalDoses/ontarioPopulation)
+            totalDoses = f'{totalDoses:,d}'
+            return('Number of People That Have Received At Least One Dose: ' + totalDoses + '\nPercentage of Ontario Population With At Least One Dose: ' + percentage)
+    except:
+        return 'No Response\n Please Try Again'
 
 #endregion
 
+if __name__ == '__main__':
+    main()
