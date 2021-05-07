@@ -1,5 +1,8 @@
 Eirian will take commands from the user and scrape two different sites. It will deliver information on new cases, active cases, deaths, and total cases for cities based on public health units. Additionally, it will provide provincial-wide statistics. Eirian also provides information on vaccine doses administered and the percentage of the population immunized.
 
+# Devpost and Video 
+Link: https://devpost.com/software/eirian
+
 ## **Instructions (WINDOWS)** 
 - https://sites.google.com/a/chromium.org/chromedriver/downloads
           -> download correct version according to device
