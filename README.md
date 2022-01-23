@@ -38,3 +38,9 @@ Link: https://devpost.com/software/eirian
 - ">firstDose"
 
 - ">help" (Provides command descriptions)
+
+## **Contributors**
+Muyeed
+Zakir
+Nausin
+Yamin
