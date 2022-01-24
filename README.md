@@ -40,7 +40,9 @@ Link: https://devpost.com/software/eirian
 - ">help" (Provides command descriptions)
 
 ## **Contributors**
-Muyeed
-Zakir
-Nausin
-Yamin
+<ul>
+  <li>Zakir - @zakirdawood</li>
+  <li>Nausin - @aminnausin</li>
+  <li>Muyeed - @muyeed10</li>
+  <li>Yamin - @yaminxv</li>
+</ul>
