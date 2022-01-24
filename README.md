@@ -40,7 +40,7 @@ Link: https://devpost.com/software/eirian
 - ">help" (Provides command descriptions)
 
 ## **Contributors**
-Zakir - [@zakirdawood](https://github.com/zakirdawood)
-Nausin - [@aminnausin](https://github.com/aminnausin)
-Muyeed - [@muyeed10](https://github.com/muyeed10)
-Yamin - [@yaminxv](https://github.com/yaminxv)
+Zakir - [@zakirdawood](https://github.com/zakirdawood)  
+Nausin - [@aminnausin](https://github.com/aminnausin)  
+Muyeed - [@muyeed10](https://github.com/muyeed10)  
+Yamin - [@yaminxv](https://github.com/yaminxv)  
