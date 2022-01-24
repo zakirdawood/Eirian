@@ -41,7 +41,7 @@ Link: https://devpost.com/software/eirian
 
 ## **Contributors**
 <ul>
-  <li>Zakir - [@zakirdawood]: https://github.com/zakirdawood</li>
+  <li>Zakir - [@zakirdawood]: http://www.reddit.com</li>
   <li>Nausin - @aminnausin</li>
   <li>Muyeed - @muyeed10</li>
   <li>Yamin - @yaminxv</li>
